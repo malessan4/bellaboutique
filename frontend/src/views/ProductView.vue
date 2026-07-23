@@ -87,7 +87,7 @@
 import { ref, onMounted, inject, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useCartStore } from '@/stores/cart'
-import api from '@/api'
+import { productsApi } from '@/api'
 import ProductCard from '@/components/ui/ProductCard.vue'
 
 const route = useRoute()
@@ -111,15 +111,15 @@ function fmt(p) { return new Intl.NumberFormat('es-AR',{style:'currency',currenc
 async function loadProduct() {
   loading.value = true
   try {
-    const res = await api.get(`/products/${route.params.slug}`)
-    product.value = res.data.data
+    const res = await productsApi.getBySlug(route.params.slug)
+    product.value = res.data
     mainImage.value = product.value.images?.[0] || ''
     selectedSize.value = product.value.sizes?.[0] || ''
     selectedColor.value = product.value.colors?.[0] || ''
     
     // Load related
-    const relRes = await api.get(`/products?category=${product.value.category?.slug}&limit=4`)
-    related.value = relRes.data.data.filter(p => p.id !== product.value.id).slice(0,4)
+    const relRes = await productsApi.getAll({ category: product.value.category?.slug, limit: 4 })
+    related.value = (relRes.data.products || []).filter(p => p.id !== product.value.id).slice(0,4)
   } catch(e) {
     console.error(e)
   } finally {
