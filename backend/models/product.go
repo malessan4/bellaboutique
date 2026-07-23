@@ -13,8 +13,9 @@ type Product struct {
 	CategoryID  uint     `json:"category_id"`
 	Category    Category `json:"category,omitempty" gorm:"foreignKey:CategoryID"`
 	Sizes       []string `json:"sizes" gorm:"serializer:json"`
-	Colors      []string `json:"colors" gorm:"serializer:json"`
-	Stock       int      `json:"stock" gorm:"default:100"`
-	Featured    bool     `json:"featured" gorm:"default:false"`
-	Tags        []string `json:"tags" gorm:"serializer:json"`
+	Colors      []string          `json:"colors" gorm:"serializer:json"`
+	ColorImages map[string]string `json:"color_images" gorm:"serializer:json"`
+	Stock       int               `json:"stock" gorm:"default:100"`
+	Featured    bool              `json:"featured" gorm:"default:false"`
+	Tags        []string          `json:"tags" gorm:"serializer:json"`
 }
