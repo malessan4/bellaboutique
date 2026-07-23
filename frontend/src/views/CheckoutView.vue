@@ -90,7 +90,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '@/stores/cart'
-import api from '@/api'
+import { ordersApi, paymentsApi } from '@/api'
 
 const cart = useCartStore()
 const router = useRouter()
@@ -107,15 +107,20 @@ async function submit() {
   loading.value = true
   try {
     const payload = {
-      customer: { name: form.value.name, email: form.value.email, phone: form.value.phone },
-      shipping_address: { address: form.value.address, city: form.value.city, state: form.value.state, zip_code: form.value.zip },
+      customer_name: form.value.name,
+      customer_email: form.value.email,
+      customer_phone: form.value.phone,
+      shipping_address: form.value.address,
+      city: form.value.city,
+      province: form.value.state,
+      postal_code: form.value.zip,
       notes: form.value.notes,
-      items: cart.items.map(i => ({ product_id: i.id, quantity: i.quantity, price: i.price, size: i.size, color: i.color }))
+      items: cart.items.map(i => ({ product_id: i.id, quantity: i.quantity, size: i.size, color: i.color }))
     }
-    const orderRes = await api.post('/orders', payload)
-    const orderId = orderRes.data.order.id
+    const orderRes = await ordersApi.create(payload)
+    const orderId = orderRes.data.ID
     
-    const payRes = await api.post('/payments/create', { order_id: orderId })
+    const payRes = await paymentsApi.create(orderId)
     window.location.href = payRes.data.sandbox_init_point || payRes.data.init_point
   } catch (e) {
     console.error(e)
