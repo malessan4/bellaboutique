@@ -1,9 +1,12 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
+	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	"bellaboutique/models"
 
@@ -14,6 +17,30 @@ import (
 type ProductHandler struct{ db *gorm.DB }
 
 func NewProductHandler(db *gorm.DB) *ProductHandler { return &ProductHandler{db: db} }
+
+func (h *ProductHandler) UploadImage(c *gin.Context) {
+	file, err := c.FormFile("image")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "No se recibio ninguna imagen"})
+		return
+	}
+
+	ext := filepath.Ext(file.Filename)
+	filename := fmt.Sprintf("%d%s", time.Now().UnixNano(), ext)
+	savePath := filepath.Join("uploads", filename)
+
+	if err := c.SaveUploadedFile(file, savePath); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al guardar imagen"})
+		return
+	}
+
+	scheme := "http"
+	if c.Request.TLS != nil || c.GetHeader("X-Forwarded-Proto") == "https" {
+		scheme = "https"
+	}
+	url := fmt.Sprintf("%s://%s/uploads/%s", scheme, c.Request.Host, filename)
+	c.JSON(http.StatusOK, gin.H{"url": url})
+}
 
 func (h *ProductHandler) GetAll(c *gin.Context) {
 	var products []models.Product
