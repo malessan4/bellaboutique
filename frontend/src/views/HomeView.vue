@@ -116,15 +116,15 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import ProductCard from '@/components/ui/ProductCard.vue'
-import api from '@/api' // Assuming a generic api service
+import { productsApi } from '@/api'
 
 const products = ref([])
 const loading = ref(true)
 
 async function load() {
   try {
-    const res = await api.get('/products/featured')
-    products.value = res.data?.data || []
+    const res = await productsApi.getFeatured()
+    products.value = res.data || []
   } catch (e) {
     console.error(e)
   } finally {
