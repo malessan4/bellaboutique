@@ -20,7 +20,7 @@ func Seed(db *gorm.DB, cfg *config.Config) {
 	log.Println("Sembrando datos iniciales...")
 
 	categories := []models.Category{
-		{Name: "Lenceria", Slug: "lenceria", Description: "Sujetadores, bragas, bodys y corses de la mas alta calidad", Image: "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=600&q=80"},
+		{Name: "Lenceria", Slug: "lenceria", Description: "Sujetadores, bragas, bodys y corses de la mas alta calidad", Image: "https://images.unsplash.com/photo-1588661621379-91fb577908b8?w=600&q=80"},
 		{Name: "Ropa Casual", Slug: "ropa-casual", Description: "Moda femenina para el dia a dia con estilo y comodidad", Image: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&q=80"},
 		{Name: "Pijamas y Loungewear", Slug: "pijamas-loungewear", Description: "Conjuntos comodos para descansar en casa con elegancia", Image: "https://images.unsplash.com/photo-1545291730-faff8ca1d4b0?w=600&q=80"},
 		{Name: "Accesorios", Slug: "accesorios", Description: "Complementos perfectos para realzar cualquier look", Image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&q=80"},
@@ -40,7 +40,7 @@ func Seed(db *gorm.DB, cfg *config.Config) {
 			Name: "Soutien con Encaje Negro", Slug: "soutien-encaje-negro",
 			Description: "Soutien de encaje premium con aro y copa moldeada. Confeccionado en 80% nylon y 20% elastano. Ajuste perfecto para todo el dia.",
 			Price: 9500, SalePrice: &sale1,
-			Images:     []string{"https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=600&q=80"},
+			Images:     []string{"https://images.unsplash.com/photo-1588661621379-91fb577908b8?w=600&q=80"},
 			CategoryID: 1,
 			Sizes:      []string{"32A", "32B", "34A", "34B", "34C", "36B", "36C"},
 			Colors:     []string{"Negro", "Nude", "Bordo"},
