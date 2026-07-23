@@ -103,7 +103,7 @@ const form = ref({ email:'', phone:'', name:'', address:'', city:'', zip:'', sta
 function fmt(p){return new Intl.NumberFormat('es-AR',{style:'currency',currency:'ARS',maximumFractionDigits:0}).format(p)}
 
 async function submit() {
-  if (cart.count === 0) return alert('El carrito está vacío')
+  if (cart.count === 0) return toast?.error('El carrito está vacío')
   loading.value = true
   try {
     const payload = {
@@ -121,10 +121,15 @@ async function submit() {
     const orderId = orderRes.data.ID
     
     const payRes = await paymentsApi.create(orderId)
-    window.location.href = payRes.data.sandbox_init_point || payRes.data.init_point
+    if(payRes.data.sandbox_init_point || payRes.data.init_point) {
+      window.location.href = payRes.data.sandbox_init_point || payRes.data.init_point
+    } else {
+      toast?.error('El pago ha sido cancelado o cerrado.')
+    }
   } catch (e) {
-    console.error(e)
-    alert('Error al procesar la orden. Intentá nuevamente.')
+    console.error("Error Checkout:", e.response?.data || e)
+    toast?.error('Error al procesar la orden. Intentá nuevamente.')
+  } finally {
     loading.value = false
   }
 }
