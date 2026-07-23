@@ -76,7 +76,7 @@
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ProductCard from '@/components/ui/ProductCard.vue'
-import api from '@/api'
+import { productsApi } from '@/api'
 
 const route = useRoute()
 const router = useRouter()
@@ -98,11 +98,11 @@ const filters = ref({
 async function fetchProducts() {
   loading.value = true
   try {
-    const params = new URLSearchParams({ page: page.value, ...filters.value })
-    const res = await api.get(`/products?${params.toString()}`)
-    products.value = res.data?.data || []
-    total.value = res.data?.meta?.total || 0
-    totalPages.value = res.data?.meta?.last_page || 1
+    const params = { page: page.value, ...filters.value }
+    const res = await productsApi.getAll(params)
+    products.value = res.data?.products || []
+    total.value = res.data?.total || 0
+    totalPages.value = res.data?.pages || 1
   } catch (e) {
     console.error(e)
   } finally {
