@@ -13,6 +13,7 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = res.data.user
     localStorage.setItem('bb_token', token.value)
     localStorage.setItem('bb_user', JSON.stringify(user.value))
+    return true
   }
 
   function logout() {
