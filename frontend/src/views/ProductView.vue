@@ -10,7 +10,9 @@
       <!-- Gallery -->
       <div class="product-gallery">
         <div class="product-img-main">
+          <button class="gallery-arrow prev" v-if="product.images?.length > 1" @click="prevImg">‹</button>
           <img :src="mainImage" :alt="product.name" />
+          <button class="gallery-arrow next" v-if="product.images?.length > 1" @click="nextImg">›</button>
           <span v-if="product.sale_price" class="badge badge-sale product-badge">OFERTA</span>
         </div>
         <div class="product-thumbnails" v-if="product.images?.length > 1">
@@ -103,10 +105,34 @@ const selectedColor = ref('')
 const qty = ref(1)
 
 function cssColor(c) {
-  const map = { 'blanco': '#ffffff', 'negro': '#000000', 'rojo': '#ff0000', 'rosa': '#ffc0cb', 'nude': '#e3bc9a' }
-  return map[c.toLowerCase()] || c
+  const clr = c.toLowerCase().trim()
+  const map = { 
+    'blanco': '#ffffff', 'negro': '#000000', 'rojo': '#ff0000', 'rosa': '#ffc0cb', 'nude': '#e3bc9a',
+    'bordo': '#800000', 'bordó': '#800000', 'marfil': '#fffff0', 'champagne': '#fad6a5', 
+    'azul noche': '#191970', 'azul': '#0000ff', 'floral rosa': '#ffb6c1', 'floral azul': '#add8e6',
+    'floral neutro': '#f5f5dc', 'rosa palo': '#e0bfb8', 'celeste': '#87ceeb', 'beige': '#f5f5dc',
+    'crema': '#fffdd0', 'camel': '#c19a6b', 'gris': '#808080', 'malva': '#e0b0ff',
+    'azul cielo': '#87ceeb', 'lima': '#bfff00', 'animal print': '#c2a679', 'dorado': '#ffd700',
+    'plateado': '#c0c0c0', 'rose gold': '#b76e79', 'unico': 'var(--c-rose)', 'único': 'var(--c-rose)',
+    'lila': '#c8a2c8', 'amarillo': '#ffff00', 'verde': '#008000', 'naranja': '#ffa500', 'violeta': '#ee82ee'
+  }
+  return map[clr] || clr
 }
 function fmt(p) { return new Intl.NumberFormat('es-AR',{style:'currency',currency:'ARS',maximumFractionDigits:0}).format(p) }
+
+function prevImg() {
+  if (!product.value?.images?.length) return
+  const idx = product.value.images.indexOf(mainImage.value)
+  if (idx > 0) mainImage.value = product.value.images[idx - 1]
+  else mainImage.value = product.value.images[product.value.images.length - 1]
+}
+
+function nextImg() {
+  if (!product.value?.images?.length) return
+  const idx = product.value.images.indexOf(mainImage.value)
+  if (idx < product.value.images.length - 1) mainImage.value = product.value.images[idx + 1]
+  else mainImage.value = product.value.images[0]
+}
 
 async function loadProduct() {
   loading.value = true
@@ -136,6 +162,13 @@ function addToCart() {
 }
 
 watch(() => route.params.slug, loadProduct)
+
+watch(selectedColor, (newColor) => {
+  if (product.value?.color_images && product.value.color_images[newColor]) {
+    mainImage.value = product.value.color_images[newColor]
+  }
+})
+
 onMounted(loadProduct)
 </script>
 
@@ -148,7 +181,12 @@ onMounted(loadProduct)
 
 .product-img-main { position: relative; aspect-ratio: 3/4; border-radius: var(--r-lg); overflow: hidden; background: var(--c-bg-3); }
 .product-img-main img { width: 100%; height: 100%; object-fit: cover; }
-.product-badge { position: absolute; top: var(--sp-4); left: var(--sp-4); }
+.product-badge { position: absolute; top: var(--sp-4); left: var(--sp-4); z-index: 10; }
+
+.gallery-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: 1px solid rgba(255,255,255,0.2); width: 44px; height: 44px; border-radius: 50%; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all var(--t-fast); z-index: 10; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); padding-bottom: 2px; }
+.gallery-arrow:hover { background: var(--c-rose); border-color: var(--c-rose); transform: translateY(-50%) scale(1.1); }
+.gallery-arrow.prev { left: var(--sp-4); }
+.gallery-arrow.next { right: var(--sp-4); }
 
 .product-thumbnails { display: flex; gap: var(--sp-3); margin-top: var(--sp-3); overflow-x: auto; padding-bottom: var(--sp-2); }
 .thumbnail { width: 80px; height: 100px; flex-shrink: 0; border-radius: var(--r-md); overflow: hidden; border: 2px solid transparent; transition: border-color var(--t-fast); }
