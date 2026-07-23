@@ -46,7 +46,7 @@
         <h2 class="section-title visible-on-scroll" style="text-align:center;margin-bottom:var(--sp-12)">Nuestras Categorías</h2>
         <div class="cat-grid">
           <router-link to="/catalogo?category=lenceria" class="cat-card visible-on-scroll">
-            <div class="cat-card__bg" style="background-image:url('https://images.unsplash.com/photo-1616086700868-b7c1cd8d3220?w=800&q=80')"></div>
+            <div class="cat-card__bg" style="background-image:url('https://http2.mlstatic.com/D_NQ_NP_2X_905491-MLA110904768884_052026-F.webp')"></div>
             <div class="cat-card__overlay">
               <h3 class="cat-card__title">Lencería</h3>
               <span class="btn btn-primary">Ver más</span>
@@ -60,7 +60,7 @@
             </div>
           </router-link>
           <router-link to="/catalogo?category=pijamas-loungewear" class="cat-card visible-on-scroll" style="animation-delay:0.2s">
-            <div class="cat-card__bg" style="background-image:url('https://images.unsplash.com/photo-1601288496920-b6154fe3626a?w=800&q=80')"></div>
+            <div class="cat-card__bg" style="background-image:url('https://http2.mlstatic.com/D_NQ_NP_2X_816492-MLA110126950367_042026-F.webp')"></div>
             <div class="cat-card__overlay">
               <h3 class="cat-card__title">Pijamas</h3>
               <span class="btn btn-primary">Ver más</span>
@@ -86,7 +86,7 @@
             <div v-for="i in 8" :key="i" class="skeleton" style="aspect-ratio:3/4"></div>
           </template>
           <template v-else>
-            <ProductCard v-for="p in products" :key="p.id" :product="p" class="visible-on-scroll" />
+            <ProductCard v-for="p in products" :key="p.id" :product="p" />
           </template>
         </div>
       </div>
@@ -114,12 +114,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, inject } from 'vue'
 import ProductCard from '@/components/ui/ProductCard.vue'
 import { productsApi } from '@/api'
 
 const products = ref([])
 const loading = ref(true)
+const toast = inject('toast', null)
 
 async function load() {
   try {
@@ -132,7 +133,7 @@ async function load() {
   }
 }
 
-function sub() { alert('¡Gracias por suscribirte!') }
+function sub() { toast?.success('¡Gracias por suscribirte!') }
 
 onMounted(() => {
   load()
@@ -145,7 +146,11 @@ onMounted(() => {
     })
   }, { threshold: 0.1 })
   
+  // Observar elementos estaticos
   document.querySelectorAll('.visible-on-scroll').forEach(el => observer.observe(el))
+  
+  // Exponer observer para que componentes hijos o dinamicos puedan usarlo
+  window.__bb_observer = observer
 })
 </script>
 
