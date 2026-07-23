@@ -1,1 +1,0 @@
-package main; import ("fmt"; "bellaboutique/config"; "bellaboutique/database"; "bellaboutique/models"); func main() { cfg := config.Load(); db := database.Connect(cfg.DatabaseURL); var p models.Product; err := db.First(&p, 1).Error; fmt.Printf("ERR: %v\n", err) }
