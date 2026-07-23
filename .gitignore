@@ -1,0 +1,71 @@
+# ==========================================
+# ARCHIVOS SENSIBLES — NUNCA COMMITEAR
+# ==========================================
+
+# Variables de entorno
+.env
+*.env
+.env.local
+.env.*.local
+!.env.example
+
+# Credenciales y secretos
+*.pem
+*.key
+*.cert
+*.pfx
+secrets/
+
+# ==========================================
+# GO (Backend)
+# ==========================================
+backend/vendor/
+backend/*.exe
+backend/*.exe~
+backend/*.dll
+backend/*.so
+backend/*.dylib
+backend/tmp/
+backend/bin/
+# Test binaries
+backend/*.test
+backend/*.out
+# Dependency directories
+backend/vendor/
+
+# ==========================================
+# NODE / VUE (Frontend)
+# ==========================================
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==========================================
+# Misc
+# ==========================================
+*.log
+*.tmp
+*.bak
+coverage/
+.coverage
