@@ -48,9 +48,13 @@ func Setup(db *gorm.DB, cfg *config.Config) *gin.Engine {
 
 		api.POST("/auth/login", authH.Login)
 
+		// Servir imagenes de forma estatica
+		r.Static("/uploads", "./uploads")
+
 		admin := api.Group("/admin")
 		admin.Use(middleware.AuthRequired(cfg.JWTSecret))
 		{
+			admin.POST("/upload", productH.UploadImage)
 			admin.POST("/products", productH.Create)
 			admin.PUT("/products/:id", productH.Update)
 			admin.DELETE("/products/:id", productH.Delete)
