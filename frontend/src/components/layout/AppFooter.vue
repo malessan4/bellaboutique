@@ -36,7 +36,10 @@
         </div>
       </div>
       <div class="footer__bottom">
-        <p>© {{ new Date().getFullYear() }} Bella Boutique. Todos los derechos reservados.</p>
+        <p>
+          © {{ new Date().getFullYear() }} Bella Boutique. Todos los derechos reservados.
+          <router-link to="/admin/login" style="color:inherit;text-decoration:none;opacity:0.5;margin-left:0.5rem">Admin</router-link>
+        </p>
         <p>Hecho con ♡ en Argentina</p>
       </div>
     </div>
