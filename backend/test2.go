@@ -1,0 +1,1 @@
+package main; import ("fmt"; "bellaboutique/config"; "bellaboutique/database"); func main() { cfg := config.Load(); db := database.Connect(cfg.DatabaseURL); var images string; db.Table("products").Select("images").Where("id = ?", 1).Scan(&images); fmt.Printf("IMAGES: %s\n", images) }
