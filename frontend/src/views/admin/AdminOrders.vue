@@ -74,11 +74,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, inject } from 'vue'
 import AdminSidebar from '@/components/admin/AdminSidebar.vue'
 import api from '@/api'
 
 const orders = ref([])
+const toast = inject('toast', null)
 const filterStatus = ref('')
 const expanded = ref(null)
 
@@ -95,8 +96,8 @@ async function updateStatus(o) {
   try {
     await api.patch(`/orders/${o.id}/status`, { status: o.newStatus })
     o.status = o.newStatus
-    alert('Estado actualizado')
-  } catch(e) { alert('Error al actualizar') }
+    toast?.success('Estado actualizado')
+  } catch(e) { toast?.error('Error al actualizar') }
 }
 
 onMounted(load)
