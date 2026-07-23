@@ -35,6 +35,11 @@ export const productsApi = {
   create: (data) => api.post('/api/admin/products', data),
   update: (id, data) => api.put(`/api/admin/products/${id}`, data),
   delete: (id) => api.delete(`/api/admin/products/${id}`),
+  uploadImage: (file) => {
+    const fd = new FormData()
+    fd.append('image', file)
+    return api.post('/api/admin/upload', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
+  }
 }
 
 export const categoriesApi = {
