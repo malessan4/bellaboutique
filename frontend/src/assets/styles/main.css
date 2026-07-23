@@ -68,8 +68,9 @@ h1,h2,h3,h4,h5{font-family:var(--font-display);font-weight:600;line-height:1.2;}
 .form-input{width:100%;padding:0.75rem 1rem;background:rgba(255,255,255,0.05);border:1px solid var(--c-border);border-radius:var(--r-md);color:var(--c-text);font-size:0.9rem;transition:border-color var(--t-fast),box-shadow var(--t-fast);}
 .form-input:focus{outline:none;border-color:var(--c-rose);box-shadow:0 0 0 3px rgba(201,132,122,0.15);}
 .form-input::placeholder{color:var(--c-text-subtle);}
-.form-select{width:100%;padding:0.75rem 1rem;background:rgba(255,255,255,0.05);border:1px solid var(--c-border);border-radius:var(--r-md);color:var(--c-text);font-size:0.9rem;appearance:none;transition:border-color var(--t-fast);}
+.form-select{width:100%;padding:0.75rem 1rem;background:rgba(255,255,255,0.05);border:1px solid var(--c-border);border-radius:var(--r-md);color:var(--c-text);font-size:0.9rem;appearance:none;transition:border-color var(--t-fast);color-scheme:dark;}
 .form-select:focus{outline:none;border-color:var(--c-rose);}
+.form-select option{background:var(--c-bg-2);color:var(--c-text);}
 .form-error{font-size:0.8rem;color:#ff6b6b;}
 
 .badge{display:inline-flex;align-items:center;padding:0.2rem 0.6rem;border-radius:var(--r-full);font-size:0.7rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;}
