@@ -51,7 +51,11 @@ async function login() {
       error.value = 'Credenciales incorrectas'
     }
   } catch (e) {
-    error.value = 'Error al conectar con el servidor'
+    if (e.response && e.response.status === 401) {
+      error.value = 'Credenciales incorrectas (Error 401)'
+    } else {
+      error.value = 'Error al conectar con el servidor'
+    }
   } finally {
     loading.value = false
   }
