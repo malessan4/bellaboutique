@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 
 	"bellaboutique/models"
 )
@@ -32,10 +33,11 @@ type MPBackURLs struct {
 
 type MPPreferenceRequest struct {
 	Items             []MPItem   `json:"items"`
-	Payer             MPPayer    `json:"payer"`
-	BackURLs          MPBackURLs `json:"back_urls"`
-	AutoReturn        string     `json:"auto_return"`
+	Payer             MPPayer    `json:"payer,omitempty"`
+	BackURLs          MPBackURLs `json:"back_urls,omitempty"`
+	AutoReturn        string     `json:"auto_return,omitempty"`
 	ExternalReference string     `json:"external_reference"`
+	NotificationURL   string     `json:"notification_url,omitempty"`
 }
 
 type MPPreferenceResponse struct {
@@ -73,14 +75,19 @@ func CreateMPPreference(order *models.Order, items []models.OrderItem, accessTok
 	orderRef := fmt.Sprintf("%d", order.ID)
 	prefReq := MPPreferenceRequest{
 		Items:  mpItems,
-		Payer:  MPPayer{Name: order.CustomerName, Email: order.CustomerEmail},
-		BackURLs: MPBackURLs{
+		ExternalReference: orderRef,
+	}
+
+	// back_urls y auto_return solo funcionan con URLs publicas (no localhost)
+	if !strings.Contains(frontendURL, "localhost") {
+		prefReq.BackURLs = MPBackURLs{
 			Success: frontendURL + "/pago/exitoso?order=" + orderRef,
 			Failure: frontendURL + "/pago/fallido?order=" + orderRef,
 			Pending: frontendURL + "/pago/pendiente?order=" + orderRef,
-		},
-		AutoReturn:        "approved",
-		ExternalReference: orderRef,
+		}
+		prefReq.AutoReturn = "approved"
+		// Le decimos a MP donde avisarnos que el pago fue aprobado (Webhook)
+		prefReq.NotificationURL = "https://bellaboutique.onrender.com/api/payments/webhook"
 	}
 
 	body, err := json.Marshal(prefReq)
