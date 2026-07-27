@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 
@@ -36,6 +37,7 @@ func (h *PaymentHandler) Create(c *gin.Context) {
 	}
 	pref, err := services.CreateMPPreference(&order, order.Items, h.cfg.MPAccessToken, h.cfg.FrontendURL)
 	if err != nil {
+		log.Println("ERROR MercadoPago:", err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error MercadoPago: " + err.Error()})
 		return
 	}
@@ -76,6 +78,15 @@ func (h *PaymentHandler) Webhook(c *gin.Context) {
 					"status":        status,
 					"mp_payment_id": payload.Data.ID,
 				})
+
+				// Descontar stock si el pago fue aprobado
+				if status == "paid" {
+					var orderItems []models.OrderItem
+					h.db.Where("order_id = ?", orderID).Find(&orderItems)
+					for _, item := range orderItems {
+						h.db.Exec("UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?", item.Quantity, item.ProductID, item.Quantity)
+					}
+				}
 			}
 		}
 	}
