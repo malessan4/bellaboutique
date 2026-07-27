@@ -18,12 +18,13 @@ export const useCartStore = defineStore('cart', () => {
   const total = computed(() => subtotal.value + shipping.value)
 
   function addItem(product, size, color, quantity = 1) {
-    const idx = items.value.findIndex(i => i.id === product.id && i.size === size && i.color === color)
+    const pid = product.ID || product.id
+    const idx = items.value.findIndex(i => i.id === pid && i.size === size && i.color === color)
     if (idx >= 0) {
       items.value[idx].quantity += quantity
     } else {
       items.value.push({
-        id: product.id,
+        id: pid,
         name: product.name,
         price: product.sale_price || product.price,
         image: product.images?.[0] || '',
