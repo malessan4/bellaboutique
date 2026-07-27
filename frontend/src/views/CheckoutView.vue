@@ -87,7 +87,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '@/stores/cart'
 import { ordersApi, paymentsApi } from '@/api'
@@ -95,6 +95,7 @@ import { ordersApi, paymentsApi } from '@/api'
 const cart = useCartStore()
 const router = useRouter()
 const loading = ref(false)
+const toast = inject('toast', null)
 
 const provincias = ['Buenos Aires','Catamarca','Chaco','Chubut','Córdoba','Corrientes','Entre Ríos','Formosa','Jujuy','La Pampa','La Rioja','Mendoza','Misiones','Neuquén','Río Negro','Salta','San Juan','San Luis','Santa Cruz','Santa Fe','Santiago del Estero','Tierra del Fuego','Tucumán']
 
@@ -121,8 +122,8 @@ async function submit() {
     const orderId = orderRes.data.ID
     
     const payRes = await paymentsApi.create(orderId)
-    if(payRes.data.sandbox_init_point || payRes.data.init_point) {
-      window.location.href = payRes.data.sandbox_init_point || payRes.data.init_point
+    if(payRes.data.init_point) {
+      window.location.href = payRes.data.init_point
     } else {
       toast?.error('El pago ha sido cancelado o cerrado.')
     }
